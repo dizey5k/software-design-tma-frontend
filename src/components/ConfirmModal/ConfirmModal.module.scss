@@ -1,0 +1,36 @@
+.message {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #8e8e93);
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancelBtn, .confirmBtn {
+  flex: 1;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.cancelBtn {
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.confirmBtn {
+  background: #ff3b30;
+  color: #ffffff;
+}
