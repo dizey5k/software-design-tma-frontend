@@ -1,0 +1,99 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tg-theme-hint-color, #8e8e93);
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--tg-theme-hint-color, #e2e8f0);
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #3b82f6;
+    }
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  select {
+    cursor: pointer;
+  }
+}
+
+.prioritySelect {
+  &[value="HIGH"], option[value="HIGH"] {
+    color: #ff3b30;
+    font-weight: 600;
+  }
+  &[value="MEDIUM"], option[value="MEDIUM"] {
+    color: #ffcc00;
+    font-weight: 600;
+  }
+  &[value="LOW"], option[value="LOW"] {
+    color: #34c759;
+    font-weight: 600;
+  }
+
+  &[value="HIGH"] { border-color: #ff3b30; }
+  &[value="MEDIUM"] { border-color: #ffcc00; }
+  &[value="LOW"] { border-color: #34c759; }
+}
+
+.saveBtn {
+  margin-top: 10px;
+  width: 100%;
+  background-color: var(--tg-theme-button-color, #3b82f6);
+  color: var(--tg-theme-button-text-color, #ffffff);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.rowFlex {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 5px;
+
+  .field {
+    width: 50%;
+  }
+}
