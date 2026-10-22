@@ -1,0 +1,87 @@
+version: 53
+jobs:
+- name: Deploy Frontend
+  jobExecutor: server-docker-executor
+  steps:
+  - type: CheckoutStep
+    name: Checkout frontend code
+    cloneCredential:
+      type: DefaultCredential
+    withLfs: false
+    withSubmodules: false
+    condition: SUCCESSFUL
+    optional: false
+  - type: CommandStep
+    name: Build & Deploy Frontend
+    runInContainer: true
+    image: docker:cli
+    interpreter:
+      type: PosixInterpreter
+      shell: sh
+      commands: |
+        echo "=== Starting Frontend Deployment ==="
+
+        docker rm -f tma_frontend || true
+        docker compose build --parallel
+        docker compose up -d
+
+        echo "=== Frontend deployed successfully! ==="
+    runAs: 0:0
+    useTTY: true
+    condition: SUCCESSFUL
+    optional: false
+  triggers:
+  - type: BranchUpdateTrigger
+    userMatch: anyone
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  includeUpstreamWhenRebuild: false
+  includeDownstreamWhenRebuild: false
+  timeout: 14400
+- name: TMA AI Compliance Check
+  jobExecutor: server-docker-executor
+  steps:
+  - type: CheckoutStep
+    name: Run checkout ai
+    cloneCredential:
+      type: DefaultCredential
+    withLfs: false
+    withSubmodules: false
+    condition: SUCCESSFUL
+    optional: false
+  - type: CommandStep
+    name: run
+    runInContainer: true
+    image: python:3.11
+    interpreter:
+      type: PosixInterpreter
+      shell: sh
+      commands: |
+        export TOKEN="@secret:AI_TOKEN@"
+        git clone https://oauth2:$TOKEN@@git.dizzzy.space/tma-project/tools.git /tmp/tools
+
+        git fetch origin main:refs/remotes/origin/main --depth=50 || git fetch origin main || true
+
+        pip install -r /tmp/tools/requirements.txt
+
+        export GEMINI_API_KEY="@secret:GEMINI_API_KEY@"
+        export ONEDEV_PULL_REQUEST_ID="@pull_request_number@"
+        export ONEDEV_USER_ID="2"
+        export ONEDEV_TOKEN="$TOKEN"
+        export GEMINI_PROXY="socks5://172.17.0.1:10808"
+
+        python3 /tmp/tools/main.py --target origin/main --output-md onedev_report.md -v
+    runAs: 0:0
+    useTTY: true
+    condition: SUCCESSFUL
+    optional: false
+  triggers:
+  - type: PullRequestUpdateTrigger
+    branches: main
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  includeUpstreamWhenRebuild: false
+  includeDownstreamWhenRebuild: false
+  timeout: 14400
