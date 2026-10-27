@@ -91,7 +91,7 @@ export function useTasks() {
     }
   }
 
-  const createTask = async (payload: any) => {
+  const createTask = async (payload: any): Promise<boolean> => {
     try {
       let newTask
 
@@ -105,9 +105,15 @@ export function useTasks() {
 
       haptics.success()
       toast.success('Задача успешно создана!')
+      return true
     } catch (e: any) {
       haptics.error()
-      toast.error('Не удалось создать задачу')
+      const message =
+        axios.isAxiosError(e) && e.response?.status === 503
+          ? 'ИИ-ассистент временно недоступен. Попробуйте позже.'
+          : 'Не удалось создать задачу'
+      toast.error(message)
+      return false
     }
   }
   return {
