@@ -6,11 +6,11 @@ import {
   Show,
 } from 'solid-js'
 import { mainButton, retrieveLaunchParams } from '@telegram-apps/sdk'
+import { LoaderCircle } from 'lucide-solid'
 import styles from './TaskCreateForm.module.scss'
-import LoaderCircle from 'lucide-solid/icons/loader-2'
 
 interface AITaskFormProps {
-  onSubmit: (payload: { message: string }) => Promise<void>
+  onSubmit: (payload: { message: string }) => Promise<boolean>
 }
 
 export const AITaskForm: Component<AITaskFormProps> = (props) => {
@@ -35,8 +35,9 @@ export const AITaskForm: Component<AITaskFormProps> = (props) => {
     setLoading(true)
     try {
       if (isTgNative()) mainButton.setParams({ isLoaderVisible: true })
-      await props.onSubmit({ message: message().trim() })
-      setMessage('')
+      if (await props.onSubmit({ message: message().trim() })) {
+        setMessage('')
+      }
     } finally {
       setLoading(false)
       if (isTgNative()) mainButton.setParams({ isLoaderVisible: false })
