@@ -5,7 +5,7 @@ import styles from './TaskCreateForm.module.scss'
 import { haptics } from '@/utils/haptics'
 
 interface TaskCreateFormProps {
-  onCreate: (payload: any) => Promise<void>
+  onCreate: (payload: any) => Promise<boolean>
 }
 
 export const TaskCreateForm: Component<TaskCreateFormProps> = (props) => {

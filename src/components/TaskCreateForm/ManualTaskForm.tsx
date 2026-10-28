@@ -19,7 +19,7 @@ import { LoaderCircle } from 'lucide-solid'
 import { DatePicker } from '../DatePicker/DatePicker'
 
 interface ManualTaskFormProps {
-  onSubmit: (payload: TaskCreatePayload) => Promise<void>
+  onSubmit: (payload: TaskCreatePayload) => Promise<boolean>
 }
 
 export const ManualTaskForm: Component<ManualTaskFormProps> = (props) => {
@@ -54,7 +54,7 @@ export const ManualTaskForm: Component<ManualTaskFormProps> = (props) => {
     setLoading(true)
     try {
       if (isTgNative()) mainButton.setParams({ isLoaderVisible: true })
-      await props.onSubmit({
+      const created = await props.onSubmit({
         title: title().trim(),
         description: description().trim() || undefined,
         category: category(),
@@ -62,9 +62,11 @@ export const ManualTaskForm: Component<ManualTaskFormProps> = (props) => {
         deadline: deadline() ? new Date(deadline()).toISOString() : undefined,
       })
 
-      setTitle('')
-      setDescription('')
-      setDeadline('')
+      if (created) {
+        setTitle('')
+        setDescription('')
+        setDeadline('')
+      }
     } finally {
       setLoading(false)
       if (isTgNative()) mainButton.setParams({ isLoaderVisible: false })
