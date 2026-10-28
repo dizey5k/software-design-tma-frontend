@@ -87,7 +87,7 @@
   align-items: center;
   justify-content: center;
   background: transparent;
-  padding: 8px 12px;
+  padding: 8px 6px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
@@ -95,6 +95,12 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  min-width: 0;
+
+  @media (max-width: 420px) {
+    gap: 3px;
+    font-size: 11px;
+  }
 
   &.activeTab {
     background: var(--tg-theme-bg-color, #ffffff);

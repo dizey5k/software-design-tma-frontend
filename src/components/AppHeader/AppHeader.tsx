@@ -1,12 +1,12 @@
 import { Component } from 'solid-js'
 import styles from './AppHeader.module.scss'
 import { authApi } from '@/api/auth'
-import { Calendar, Check, List, Plus, RotateCcw } from 'lucide-solid'
+import { BarChart3, Calendar, Check, List, Plus, RotateCcw } from 'lucide-solid'
 import { haptics } from '@/utils/haptics'
 import { toast } from 'solid-sonner'
 import { HealthIndicator } from '../HealthIndicator/HealthIndicator'
 
-export type TabType = 'ACTIVE' | 'CREATE' | 'DONE'
+export type TabType = 'ACTIVE' | 'CREATE' | 'DONE' | 'ANALYTICS'
 
 interface AppHeaderProps {
   activeTab: TabType
@@ -50,7 +50,7 @@ export const AppHeader: Component<AppHeaderProps> = (props) => {
           <button
             onClick={() => {
               haptics.impact('light')
-              props.onRefresh
+              props.onRefresh()
             }}
             class={styles.refreshBtn}
             title="Обновить"
@@ -88,6 +88,17 @@ export const AppHeader: Component<AppHeaderProps> = (props) => {
           }}
         >
           <Check size={16} /> Готово ({props.completedCount})
+        </button>
+        <button
+          class={`${styles.tabBtn} ${props.activeTab === 'ANALYTICS' ? styles.activeTab : ''}`}
+          onClick={() => {
+            haptics.impact('light')
+            props.setActiveTab('ANALYTICS')
+          }}
+          aria-label="Статистика"
+        >
+          <BarChart3 size={16} />
+          Статистика
         </button>
       </nav>
     </header>
