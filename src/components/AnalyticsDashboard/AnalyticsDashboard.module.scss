@@ -1,0 +1,132 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+.heading {
+  margin: 4px 0;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metric,
+.chartCard {
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.metric {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+
+  span,
+  small {
+    color: var(--tg-theme-hint-color, #8e8e93);
+    font-size: 11px;
+  }
+
+  strong {
+    font-size: 21px;
+  }
+}
+
+.chartCard {
+  h3 {
+    margin: 0 0 14px;
+    font-size: 14px;
+  }
+}
+
+.chart {
+  display: flex;
+  height: 110px;
+  align-items: flex-end;
+  gap: 2px;
+  border-bottom: 1px solid var(--tg-theme-hint-color, #8e8e93);
+}
+
+.barColumn {
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  flex: 1;
+  align-items: flex-end;
+}
+
+.bar {
+  display: block;
+  width: 100%;
+  min-height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--tg-theme-button-color, #2481cc);
+  opacity: 0.8;
+}
+
+.chartLegend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--tg-theme-hint-color, #8e8e93);
+  font-size: 11px;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.categoryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.empty,
+.message {
+  color: var(--tg-theme-hint-color, #8e8e93);
+  font-size: 13px;
+}
+
+.error {
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+  font-size: 13px;
+
+  button {
+    border: 0;
+    padding: 8px 0 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 380px) {
+  .metric {
+    padding: 10px;
+
+    strong {
+      font-size: 18px;
+    }
+
+    small {
+      font-size: 10px;
+    }
+  }
+}
