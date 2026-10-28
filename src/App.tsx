@@ -20,6 +20,8 @@ import { Toaster } from 'solid-sonner'
 import { backButton } from '@telegram-apps/sdk'
 import { Loader } from './components/Loader/Loader'
 import './index.scss'
+import { AnalyticsDashboard } from './components/AnalyticsDashboard/AnalyticsDashboard'
+import { analyticsApi, MonthlyAnalytics } from './api/analytics'
 
 export const App: Component = () => {
   const { tasks, error, loadTasks, createTask, updateTask, removeTask } =
@@ -27,9 +29,30 @@ export const App: Component = () => {
   const [activeTab, setActiveTab] = createSignal<TabType>('ACTIVE')
   const [selectedCategory, setSelectedCategory] = createSignal<string>('ALL')
   const [sortByDeadline, setSortByDeadline] = createSignal<boolean>(true)
+  const [analytics, setAnalytics] = createSignal<MonthlyAnalytics | null>(null)
+  const [analyticsLoading, setAnalyticsLoading] = createSignal(false)
+  const [analyticsError, setAnalyticsError] = createSignal<string | null>(null)
 
   onMount(() => {
     loadTasks()
+  })
+
+  const loadAnalytics = async () => {
+    setAnalyticsLoading(true)
+    setAnalyticsError(null)
+    try {
+      setAnalytics(await analyticsApi.getMonthly())
+    } catch {
+      setAnalyticsError('Не удалось загрузить статистику. Попробуйте ещё раз.')
+    } finally {
+      setAnalyticsLoading(false)
+    }
+  }
+
+  createEffect(() => {
+    if (activeTab() === 'ANALYTICS') {
+      void loadAnalytics()
+    }
   })
 
   const activeTasks = createMemo(() => {
@@ -54,9 +77,12 @@ export const App: Component = () => {
     return tasks().filter((t) => t.status === TaskStatus.DONE)
   })
 
-  const handleTaskCreated = async (payload: any) => {
-    await createTask(payload)
-    setActiveTab('ACTIVE')
+  const handleTaskCreated = async (payload: any): Promise<boolean> => {
+    const created = await createTask(payload)
+    if (created) {
+      setActiveTab('ACTIVE')
+    }
+    return created
   }
 
   createEffect(() => {
@@ -96,7 +122,13 @@ export const App: Component = () => {
       <AppHeader
         activeTab={activeTab()}
         setActiveTab={setActiveTab}
-        onRefresh={loadTasks}
+        onRefresh={() => {
+          if (activeTab() === 'ANALYTICS') {
+            void loadAnalytics()
+          } else {
+            void loadTasks()
+          }
+        }}
         activeCount={activeTasks().length}
         completedCount={completedTasks().length}
       />
@@ -132,6 +164,15 @@ export const App: Component = () => {
               tasks={completedTasks()}
               onUpdate={updateTask}
               onDelete={removeTask}
+            />
+          </Match>
+
+          <Match when={activeTab() === 'ANALYTICS'}>
+            <AnalyticsDashboard
+              data={analytics()}
+              loading={analyticsLoading()}
+              error={analyticsError()}
+              onRetry={() => void loadAnalytics()}
             />
           </Match>
         </Switch>
