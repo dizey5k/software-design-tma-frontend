@@ -109,6 +109,18 @@
   text-transform: uppercase;
 }
 
+.sharedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  padding: 2px 8px;
+  background: rgba(36, 129, 204, 0.12);
+  color: var(--tg-theme-link-color, #2481cc);
+  font-size: 10px;
+  font-weight: 600;
+}
+
 .priorityBadge {
   font-size: 10px;
   font-weight: 700;

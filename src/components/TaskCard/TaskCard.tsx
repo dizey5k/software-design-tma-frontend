@@ -5,7 +5,7 @@ import { TaskStatus } from '@/constants/task'
 import { Task } from '@/types/task'
 import { useTranslations } from '@/hooks/useTranslations'
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal'
-import { Calendar, Check, Trash2 } from 'lucide-solid'
+import { Calendar, Check, Trash2, Users } from 'lucide-solid'
 import { haptics } from '@/utils/haptics'
 
 interface TaskCardProps {
@@ -55,6 +55,12 @@ export const TaskCard: Component<TaskCardProps> = (props) => {
           <span class={styles.categoryBadge}>
             {tCategory(props.task.category)}
           </span>
+          <Show when={props.task.is_shared}>
+            <span class={styles.sharedBadge}>
+              <Users size={12} />
+              Совместная
+            </span>
+          </Show>
           <span
             class={`${styles.priorityBadge} ${styles[props.task.priority.toLowerCase()]}`}
           >

@@ -16,6 +16,7 @@ export interface Task {
   status: TaskStatusType
   source_msg_id?: number
   source_chat_id?: number
+  is_shared?: boolean
   created_at?: string
   completed_at?: string
 }
