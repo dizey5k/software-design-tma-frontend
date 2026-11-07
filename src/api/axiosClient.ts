@@ -40,6 +40,7 @@ const getTmaToken = (): string | null => {
 
 axiosClient.interceptors.request.use((config) => {
   const token = getTmaToken()
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
   if (config.headers.has('x-telegram-id')) {
     config.headers.delete('x-telegram-id')
@@ -47,6 +48,9 @@ axiosClient.interceptors.request.use((config) => {
 
   if (token) {
     config.headers.set('Authorization', `tma ${token}`)
+  }
+  if (timezone) {
+    config.headers.set('X-Timezone', timezone)
   }
 
   return config

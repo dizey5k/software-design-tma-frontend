@@ -2,7 +2,6 @@ import {
   Component,
   createSignal,
   createMemo,
-  onMount,
   Show,
   Switch,
   Match,
@@ -32,10 +31,6 @@ export const App: Component = () => {
   const [analytics, setAnalytics] = createSignal<MonthlyAnalytics | null>(null)
   const [analyticsLoading, setAnalyticsLoading] = createSignal(false)
   const [analyticsError, setAnalyticsError] = createSignal<string | null>(null)
-
-  onMount(() => {
-    loadTasks()
-  })
 
   const loadAnalytics = async () => {
     setAnalyticsLoading(true)

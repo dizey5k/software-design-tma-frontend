@@ -27,28 +27,42 @@ const BurndownChart: Component<{
   points: MonthlyAnalytics['burndown']
 }> = (props) => {
   const maximum = () =>
-    Math.max(1, ...props.points.map((point) => point.remaining_count))
+    Math.max(
+      5,
+      Math.ceil(
+        Math.max(0, ...props.points.map((point) => point.remaining_count)) * 1.2,
+      ),
+    )
 
   return (
     <section class={styles.chartCard}>
       <h3>{props.title}</h3>
       <div
-        class={styles.chart}
+        class={styles.chartWrapper}
         role="img"
-        aria-label={`${props.title}: остаток задач по дням`}
+        aria-label={`${props.title}: остаток задач по дням; максимум ${maximum()}`}
       >
-        <For each={props.points}>
-          {(point) => (
-            <div class={styles.barColumn} title={`${point.date}: осталось ${point.remaining_count}`}>
-              <span
-                class={styles.bar}
-                style={{
-                  height: `${Math.max(4, (point.remaining_count / maximum()) * 100)}%`,
-                }}
-              />
-            </div>
-          )}
-        </For>
+        <div class={styles.yAxis} aria-hidden="true">
+          <span>{maximum()}</span>
+          <span>0</span>
+        </div>
+        <div class={styles.chart}>
+          <For each={props.points}>
+            {(point) => (
+              <div
+                class={styles.barColumn}
+                title={`${point.date}: осталось ${point.remaining_count}`}
+              >
+                <span
+                  class={styles.bar}
+                  style={{
+                    height: `${(point.remaining_count / maximum()) * 100}%`,
+                  }}
+                />
+              </div>
+            )}
+          </For>
+        </div>
       </div>
       <div class={styles.chartLegend}>
         <span>Остаток задач по дням месяца</span>

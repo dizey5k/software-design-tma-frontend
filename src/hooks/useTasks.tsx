@@ -6,6 +6,16 @@ import { toast } from 'solid-sonner'
 import { haptics } from '@/utils/haptics'
 import { CheckCheck, RotateCw, Trash2 } from 'lucide-solid'
 
+const sameTask = (left: Task, right: Task): boolean => {
+  const keys = new Set([...Object.keys(left), ...Object.keys(right)])
+  for (const key of keys) {
+    if (left[key as keyof Task] !== right[key as keyof Task]) {
+      return false
+    }
+  }
+  return true
+}
+
 export function useTasks() {
   const [tasks, setTasks] = createSignal<Task[]>([])
   const [loading, setLoading] = createSignal<boolean>(false)
@@ -18,7 +28,22 @@ export function useTasks() {
     setError(null)
     try {
       const data = await taskApi.getTasks()
-      setTasks(data)
+      setTasks((current) => {
+        const currentById = new Map(current.map((task) => [task.id, task]))
+        let changed = current.length !== data.length
+        const merged = data.map((task, index) => {
+          const previous = currentById.get(task.id)
+          if (current[index]?.id !== task.id) {
+            changed = true
+          }
+          if (previous && sameTask(previous, task)) {
+            return previous
+          }
+          changed = true
+          return task
+        })
+        return changed ? merged : current
+      })
     } catch (err: unknown) {
       if (!isBackground) {
         if (axios.isAxiosError(err)) {
@@ -37,14 +62,17 @@ export function useTasks() {
   onMount(() => {
     loadTasks()
 
-    const interval = setInterval(() => {
+    const refreshWhenVisible = () => {
       if (document.visibilityState === 'visible') {
         loadTasks(true)
       }
-    }, 3000)
+    }
+    const interval = setInterval(refreshWhenVisible, 15000)
+    document.addEventListener('visibilitychange', refreshWhenVisible)
 
     onCleanup(() => {
       clearInterval(interval)
+      document.removeEventListener('visibilitychange', refreshWhenVisible)
     })
   })
 
