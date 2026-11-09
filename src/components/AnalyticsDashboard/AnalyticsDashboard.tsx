@@ -131,7 +131,7 @@ export const AnalyticsDashboard: Component<AnalyticsDashboardProps> = (props) =>
           <For each={data().team_burndown}>
             {(team) => (
               <BurndownChart
-                title={`Групповой чат ${team.chat_id}`}
+                title={team.chat_title || `Группа ${team.chat_id}`}
                 points={team.points}
               />
             )}

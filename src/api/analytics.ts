@@ -17,7 +17,11 @@ export interface MonthlyAnalytics {
   overdue_count: number
   category_workload: { category: string; task_count: number }[]
   burndown: BurndownPoint[]
-  team_burndown: { chat_id: string; points: BurndownPoint[] }[]
+  team_burndown: {
+    chat_id: string
+    chat_title: string | null
+    points: BurndownPoint[]
+  }[]
 }
 
 export const analyticsApi = {
