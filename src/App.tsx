@@ -51,7 +51,9 @@ export const App: Component = () => {
   })
 
   const activeTasks = createMemo(() => {
-    let list = tasks().filter((t) => t.status !== TaskStatus.DONE)
+    let list = tasks().filter(
+      (t) => !t.is_shared && t.status !== TaskStatus.DONE,
+    )
 
     if (selectedCategory() !== 'ALL') {
       list = list.filter((t) => t.category === selectedCategory())
@@ -69,7 +71,13 @@ export const App: Component = () => {
   })
 
   const completedTasks = createMemo(() => {
-    return tasks().filter((t) => t.status === TaskStatus.DONE)
+    return tasks().filter(
+      (t) => !t.is_shared && t.status === TaskStatus.DONE,
+    )
+  })
+
+  const groupTasks = createMemo(() => {
+    return tasks().filter((t) => t.is_shared)
   })
 
   const handleTaskCreated = async (payload: any): Promise<boolean> => {
@@ -126,6 +134,7 @@ export const App: Component = () => {
         }}
         activeCount={activeTasks().length}
         completedCount={completedTasks().length}
+        groupCount={groupTasks().length}
       />
 
       <main class={styles.content}>
@@ -159,6 +168,15 @@ export const App: Component = () => {
               tasks={completedTasks()}
               onUpdate={updateTask}
               onDelete={removeTask}
+            />
+          </Match>
+
+          <Match when={activeTab() === 'GROUP'}>
+            <TaskList
+              tasks={groupTasks()}
+              onUpdate={updateTask}
+              onDelete={removeTask}
+              emptyMessage="Общих задач пока нет. Создайте задачу в групповом чате командой /task или присоединитесь через /join."
             />
           </Match>
 

@@ -1,12 +1,20 @@
 import { Component } from 'solid-js'
 import styles from './AppHeader.module.scss'
 import { authApi } from '@/api/auth'
-import { BarChart3, Calendar, Check, List, Plus, RotateCcw } from 'lucide-solid'
+import {
+  BarChart3,
+  Calendar,
+  Check,
+  List,
+  Plus,
+  RotateCcw,
+  Users,
+} from 'lucide-solid'
 import { haptics } from '@/utils/haptics'
 import { toast } from 'solid-sonner'
 import { HealthIndicator } from '../HealthIndicator/HealthIndicator'
 
-export type TabType = 'ACTIVE' | 'CREATE' | 'DONE' | 'ANALYTICS'
+export type TabType = 'ACTIVE' | 'CREATE' | 'DONE' | 'GROUP' | 'ANALYTICS'
 
 interface AppHeaderProps {
   activeTab: TabType
@@ -14,6 +22,7 @@ interface AppHeaderProps {
   onRefresh: () => void
   activeCount: number
   completedCount: number
+  groupCount: number
 }
 
 export const AppHeader: Component<AppHeaderProps> = (props) => {
@@ -88,6 +97,15 @@ export const AppHeader: Component<AppHeaderProps> = (props) => {
           }}
         >
           <Check size={16} /> Готово ({props.completedCount})
+        </button>
+        <button
+          class={`${styles.tabBtn} ${props.activeTab === 'GROUP' ? styles.activeTab : ''}`}
+          onClick={() => {
+            haptics.impact('light')
+            props.setActiveTab('GROUP')
+          }}
+        >
+          <Users size={16} /> Группа ({props.groupCount})
         </button>
         <button
           class={`${styles.tabBtn} ${props.activeTab === 'ANALYTICS' ? styles.activeTab : ''}`}

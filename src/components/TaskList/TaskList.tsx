@@ -9,6 +9,7 @@ interface TaskListProps {
   tasks: Task[]
   onUpdate: (id: string, updates: Partial<Task>) => void
   onDelete: (id: string) => void
+  emptyMessage?: string
 }
 
 export const TaskList: Component<TaskListProps> = (props) => {
@@ -24,7 +25,9 @@ export const TaskList: Component<TaskListProps> = (props) => {
       <Show
         when={props.tasks.length > 0}
         fallback={
-          <div class={styles.emptyState}>Задач пока нет. Отдыхаем!</div>
+          <div class={styles.emptyState}>
+            {props.emptyMessage ?? 'Задач пока нет. Отдыхаем!'}
+          </div>
         }
       >
         <For each={props.tasks}>
