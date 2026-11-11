@@ -25,7 +25,10 @@ import { analyticsApi, MonthlyAnalytics } from './api/analytics'
 export const App: Component = () => {
   const { tasks, error, loadTasks, createTask, updateTask, removeTask } =
     useTasks()
-  const [activeTab, setActiveTab] = createSignal<TabType>('ACTIVE')
+  const launchParams = new URLSearchParams(window.location.hash.slice(1))
+  const [activeTab, setActiveTab] = createSignal<TabType>(
+    launchParams.get('tgWebAppStartParam') === 'group' ? 'GROUP' : 'ACTIVE',
+  )
   const [selectedCategory, setSelectedCategory] = createSignal<string>('ALL')
   const [sortByDeadline, setSortByDeadline] = createSignal<boolean>(true)
   const [analytics, setAnalytics] = createSignal<MonthlyAnalytics | null>(null)

@@ -72,21 +72,16 @@
 }
 
 .tabNav {
-  display: flex;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   background: var(--tg-theme-secondary-bg-color, #f4f4f5);
   padding: 4px;
   border-radius: 12px;
   gap: 4px;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .tabBtn {
-  flex: 0 0 auto;
+  width: 100%;
   display: flex;
   gap: 5px;
   border: none;
